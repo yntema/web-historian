@@ -3,6 +3,11 @@ var archive = require('../helpers/archive-helpers');
 // require more modules/folders here!
 var fs = require('fs');
 
+var actions = {
+  "GET": function() {
+
+  }
+}
 
 exports.handleRequest = function (req, res) {
   // console.log("................request method", req.method);
@@ -11,13 +16,43 @@ exports.handleRequest = function (req, res) {
   // console.log("................ res end ", archive.paths.siteAssets + '/index.html')
 
 
-  fs.readFile(archive.paths.siteAssets + '/index.html', 'utf8', function(err, data) {
-    if (err) throw err;
-      res.end(data);
+
+  if(req.method === "GET") {
+    if (req.url === "/") {
+      fs.readFile(archive.paths.siteAssets + '/index.html', 'utf8', function(err, data) {
+        if (err) throw err;
+          res.end(data);
+        });
+    } else {
+      fs.exists(archive.paths.archivedSites + req.url, function(exists) {
+        if (exists) {
+          fs.readFile(archive.paths.archivedSites + req.url, 'utf8', function(err, data) {
+            if (err) throw err;
+            res.end(data);
+          });
+        } else {
+          res.statusCode = 404;
+          res.end();
+        }
+      });
+    }
+  } else if (req.method === "POST") {
+    console.log('reached post ---------------------------------');
+    var buffer = '';
+
+
+
+    req.on('data', function(data) {
+      buffer += data;
     });
 
-
-
+    req.on('end', function() {
+      buffer = buffer.substring(4) + '\n';
+      fs.writeFile(archive.paths.list, buffer);
+      res.statusCode = 302;
+      res.end();
+    });
+  }
 };
 
 
