@@ -21,3 +21,13 @@ module.exports = function (basePath) {
     fs.mkdirSync(basePath + "/sites");
   }
 };
+
+
+// initialize is a function that will be used in the basic server.
+// it checks if the basepath folder exits and creates it if not.
+// creates /sites.txt if not already there
+// creates /sites folder if not already there
+
+
+// .sites.txt will hold the names of sites that need to be fetched by workers
+// /sites is where the html files will be stored

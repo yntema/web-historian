@@ -25,13 +25,22 @@ exports.initialize = function(pathsObj) {
 // The following function names are provided to you to suggest how you might
 // modularize your code. Keep it clean!
 
+// the code below reads through the list urls in /sites.txt
+// if the url is not there, it will add it
+// it will check if a url has been archived and will download it if so.	
+
 exports.readListOfUrls = function() {
+	// loops through all urls in sites.txt
+
 };
 
 exports.isUrlInList = function() {
+	// loop urls using readListOfUrls()
+	// if target === a url in the site.txt
 };
 
 exports.addUrlToList = function() {
+	// call html fetcher to fetch url and add to list
 };
 
 exports.isUrlArchived = function() {
