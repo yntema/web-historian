@@ -22,51 +22,41 @@ exports.initialize = function(pathsObj) {
   });
 };
 
-// The following function names are provided to you to suggest how you might
-// modularize your code. Keep it clean!
-
-// the code below reads through the list urls in /sites.txt
-// if the url is not there, it will add it
-// it will check if a url has been archived and will download it if so.	
-
 exports.readListOfUrls = function(callback) {
-	// loops through all urls in sites.txt
-      fs.readFile(this.paths.list, 'utf8', function(err, data) {
-      if (err) throw err;
-        // console.log('------------------------- data ', data);
-        callback(data.split('\n'));
-      });
-
+  fs.readFile(this.paths.list, 'utf8', function(err, data) {
+  if (err) throw err;
+    callback(data.split('\n'));
+  });
 };
 
 exports.isUrlInList = function(url, callback) {
-	// loop urls using readListOfUrls()
-	// if target === a url in the site.txt
-  this.readListOfUrls(function(urls) {
-    callback(url);
+  exports.readListOfUrls(function(urls) {
+    callback(_.contains(urls, url));
   });
-
 };
 
 exports.addUrlToList = function(url, callback) {
-  fs.appendFile(this.paths.list, url, function(err) {
-    callback(url);
+  exports.isUrlInList(url, function(bool) {
+    if (!bool) {
+      fs.appendFile(exports.paths.list, url, function(err) {
+        callback();
+      });
+    }
   });
-  // console.log("paths list", this.paths.list);
-  // var buffer = "";
-	// fs.open(this.paths.list, 'w', function(err, fd) {
- //    console.log('...................... fd ', fd)
- //    fs.write(fd, url, function(data) {
- //      console.log(data);
- //        buffer += fd;
- //        console.log('..................... buffer', buffer);  
- //    });
- //  });
-  // fs.close(this.paths.list);
 };
 
-exports.isUrlArchived = function() {
+exports.isUrlArchived = function(url, callback) {
+  fs.exists(exports.paths.archivedSites + '/' + url, function(exists) {
+    callback(exists);
+  });
 };
 
-exports.downloadUrls = function() {
+exports.downloadUrls = function(urlArray, callback) {
+  _.each(urlArray, function(url) {
+    exports.isUrlArchived(url, function(bool2) {
+      if (!bool2) {
+        fs.writeFile(exports.paths.archivedSites + '/' + url, 'abc');
+      }
+    });
+  });
 };
