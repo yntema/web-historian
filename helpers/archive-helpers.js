@@ -40,7 +40,7 @@ exports.isUrlInList = function(url, callback) {
 exports.addUrlToList = function(url, callback) {
   exports.isUrlInList(url, function(bool) {
     if (!bool) {
-      fs.appendFile(exports.paths.list, url, function(err) {
+      fs.appendFile(exports.paths.list, url + '\n', function(err) {
         callback();
       });
     }
@@ -48,7 +48,7 @@ exports.addUrlToList = function(url, callback) {
 };
 
 exports.isUrlArchived = function(url, callback) {
-  fs.exists(exports.paths.archivedSites + '/' + url, function(exists) {
+  fs.exists(exports.paths.archivedSites + '/' + url + '.html', function(exists) {
     callback(exists);
   });
 };
@@ -57,7 +57,7 @@ exports.downloadUrls = function(urlArray, callback) {
   var options = {
     host: "",
     // port: 80,
-    path: "/"
+    path: "/*"
   };
   _.each(urlArray, function(url) {
     exports.isUrlArchived(url, function(bool2) {

@@ -13,10 +13,13 @@ var archive = require('../helpers/archive-helpers.js');
 
 var CronJob = require('cron').CronJob;
 new CronJob('* * * * * *', function() {
-  console.log('Cron running...');
   var urlList;
   archive.readListOfUrls(function(urls) {
+    if (!urls[urls.length -1]) {
+      urls.pop();
+    }
     console.log(urls);
+    
     archive.downloadUrls(urls);
   });
   
