@@ -29,18 +29,40 @@ exports.initialize = function(pathsObj) {
 // if the url is not there, it will add it
 // it will check if a url has been archived and will download it if so.	
 
-exports.readListOfUrls = function() {
+exports.readListOfUrls = function(callback) {
 	// loops through all urls in sites.txt
+      fs.readFile(this.paths.list, 'utf8', function(err, data) {
+      if (err) throw err;
+        // console.log('------------------------- data ', data);
+        callback(data.split('\n'));
+      });
 
 };
 
-exports.isUrlInList = function() {
+exports.isUrlInList = function(url, callback) {
 	// loop urls using readListOfUrls()
 	// if target === a url in the site.txt
+  this.readListOfUrls(function(urls) {
+    callback(url);
+  });
+
 };
 
-exports.addUrlToList = function() {
-	// call html fetcher to fetch url and add to list
+exports.addUrlToList = function(url, callback) {
+  fs.appendFile(this.paths.list, url, function(err) {
+    callback(url);
+  });
+  // console.log("paths list", this.paths.list);
+  // var buffer = "";
+	// fs.open(this.paths.list, 'w', function(err, fd) {
+ //    console.log('...................... fd ', fd)
+ //    fs.write(fd, url, function(data) {
+ //      console.log(data);
+ //        buffer += fd;
+ //        console.log('..................... buffer', buffer);  
+ //    });
+ //  });
+  // fs.close(this.paths.list);
 };
 
 exports.isUrlArchived = function() {

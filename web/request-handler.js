@@ -37,10 +37,7 @@ exports.handleRequest = function (req, res) {
       });
     }
   } else if (req.method === "POST") {
-    console.log('reached post ---------------------------------');
     var buffer = '';
-
-
 
     req.on('data', function(data) {
       buffer += data;
