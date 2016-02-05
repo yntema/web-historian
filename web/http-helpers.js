@@ -14,11 +14,8 @@ exports.serveAssets = function(res, url, callback) {
   fs.readFile(url, 'utf8', function(err, data) {
     if (err) throw err;
     res.writeHead(200, exports.headers);
+    console.log(data);
     res.end(data);
   });
 
 };
-
-
-
-// As you progress, keep thinking about what helper functions you can put here!

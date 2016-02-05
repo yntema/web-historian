@@ -9,6 +9,12 @@ var actions = {
   "GET": function(req, res) {
     if (req.url === "/" || req.url === "") {
       httpHelpers.serveAssets(res, archive.paths.siteAssets + '/index.html');
+    } else if (req.url === "/styles.css") {
+      fs.readFile(archive.paths.siteAssets + '/styles.css', 'utf8', function(err, data) {
+        if (err) throw err;
+        res.writeHead(200, {"Content-Type": "text/css"});
+        res.end(data);
+      });
     } else {
       fs.exists(archive.paths.archivedSites + req.url, function(exists) {
         if (exists) {
