@@ -8,24 +8,20 @@ var urlParser = require('url');
 var actions = {
   "GET": function() {
 
+  },
+  "POST": function() {
+
   }
 };
 
 exports.handleRequest = function (req, res) {
   if(req.method === "GET") {
     if (req.url === "/" || req.url === "") {
-      fs.readFile(archive.paths.siteAssets + '/index.html', 'utf8', function(err, data) {
-        if (err) throw err;
-        res.writeHead(200, httpHelpers.headers);
-        res.end(data);
-        });
+      httpHelpers.serveAssets(res, archive.paths.siteAssets + '/index.html');
     } else {
       fs.exists(archive.paths.archivedSites + req.url, function(exists) {
         if (exists) {
-          fs.readFile(archive.paths.archivedSites + req.url, 'utf8', function(err, data) {
-            if (err) throw err;
-            res.end(data);
-          });
+          httpHelpers.serveAssets(res, archive.paths.archivedSites + req.url);
         } else {
           res.statusCode = 404;
           res.end();
@@ -44,28 +40,15 @@ exports.handleRequest = function (req, res) {
       archive.isUrlInList(buffer, function (isInList) {
         if (isInList) {
           archive.isUrlArchived(buffer, function (isArchived) {
-
             if (isArchived) {
-              fs.readFile(archive.paths.archivedSites + '/' + buffer + '.html', 'utf8', function(err, data) {
-                if (err) throw err;
-                res.writeHead(200, httpHelpers.headers);
-                res.end(data);
-              });
+              httpHelpers.serveAssets(res, archive.paths.archivedSites + '/' + buffer + '.html');
             } else {
-              fs.readFile(archive.paths.siteAssets + '/loading.html', 'utf8', function(err, data) {
-                if (err) throw err;
-                res.writeHead(200, httpHelpers.headers);
-                res.end(data);
-              });
+              httpHelpers.serveAssets(res, archive.paths.siteAssets + '/loading.html');
             }
           });
         } else {
           archive.addUrlToList(buffer, function() {
-            fs.readFile(archive.paths.siteAssets + '/loading.html', 'utf8', function(err, data) {
-              if (err) throw err;
-              res.writeHead(200, httpHelpers.headers);
-              res.end(data);
-            });
+            httpHelpers.serveAssets(res, archive.paths.siteAssets + '/loading.html');
           });
         }
       });
