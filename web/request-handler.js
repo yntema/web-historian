@@ -6,16 +6,7 @@ var httpHelpers = require('./http-helpers.js');
 var urlParser = require('url');
 
 var actions = {
-  "GET": function() {
-
-  },
-  "POST": function() {
-
-  }
-};
-
-exports.handleRequest = function (req, res) {
-  if(req.method === "GET") {
+  "GET": function(req, res) {
     if (req.url === "/" || req.url === "") {
       httpHelpers.serveAssets(res, archive.paths.siteAssets + '/index.html');
     } else {
@@ -28,7 +19,8 @@ exports.handleRequest = function (req, res) {
         }
       });
     }
-  } else if (req.method === "POST") {
+  },
+  "POST": function(req, res) {
     var buffer = '';
 
     req.on('data', function(data) {
@@ -54,4 +46,8 @@ exports.handleRequest = function (req, res) {
       });
     });
   }
+};
+
+exports.handleRequest = function (req, res) {
+  actions[req.method](req, res);
 };
